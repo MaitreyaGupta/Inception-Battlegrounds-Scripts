@@ -1,0 +1,219 @@
+local Time = game.ReplicatedStorage.Time
+local ArmyKill = game.ReplicatedStorage.ArmyKill
+local ClownKill = game.ReplicatedStorage.ClownKill
+local HopeBringerKill=game.ReplicatedStorage.HopebringersKill
+local CivilianKill=game.ReplicatedStorage.CivilianKill
+local Status = game.ReplicatedStorage.Status
+local Teams = game:GetService("Teams")
+local DS=game:GetService("DataStoreService"):GetDataStore("Datastore")
+local count=0
+local Players=game:GetService("Players")
+
+local Army = 0
+local Clown = 0
+local Hope=0
+local Civ=0
+
+function TimeWait(TimeToWait)
+	Time.Value = TimeToWait
+
+	repeat
+		wait(1)
+		Time.Value -= 1
+	until Time.Value < 1
+end
+
+local Player=game:GetService("Players")
+
+game.Players.PlayerAdded:Connect(function(player) 	
+	player.CharacterAdded:Connect(function(character)
+		character.Humanoid.Died:Connect(function()
+			if player.Team.TeamColor.Name==("Really red") then 
+				ArmyKill.Value-=1
+			elseif player.Team.TeamColor.Name==("Really blue") then 
+				ClownKill.Value-=1
+			elseif player.Team.TeamColor.Name==("Dark stone grey") then 
+				HopeBringerKill.Value-=1
+			elseif player.Team.TeamColor.Name==("White") then 
+				CivilianKill.Value-=1
+			end
+		end)
+	end)
+end)
+Status.Value = "Intermission"
+TimeWait(20)
+Status.Value = "Round starts in"
+TimeWait(10)
+
+ 
+function Restart()
+	for _,v in (Player:GetPlayers()) do 
+		v.Team=Teams.Team1
+		v.Team.TeamColor=Teams.Team1.TeamColor
+	end
+
+	for _,v in (Player:GetPlayers()) do 
+		v:LoadCharacter()
+	end
+	Status.Value="Interval"
+	TimeWait(30)
+	Status.Value = "Round starts in"
+	TimeWait(10)
+	if #game.Players:GetPlayers()==1 then
+		ArmyKill.Value = 5
+ 		ClownKill.Value = 5
+		HopeBringerKill.Value=5
+		CivilianKill.Value=5
+		Status.Value="Solo Exploration Mode Activated"
+		wait(1) 
+	elseif #game.Players:GetPlayers()==2 then
+		print("Wobble")
+		ArmyKill.Value = 5
+		ClownKill.Value = 5
+		HopeBringerKill.Value=5
+		CivilianKill.Value=5
+		wait(1)
+	else   
+		ArmyKill.Value = 20
+		ClownKill.Value = 20
+		HopeBringerKill.Value=20
+		CivilianKill.Value=20
+		wait(1)
+	end
+end
+game.Players.PlayerAdded:Connect(function(plr)
+	if #game.Players:GetChildren()<=20 then
+		Status.Value = "Round starts in"
+		TimeWait(10)
+		if #game.Players:GetPlayers()==1 then
+			ArmyKill.Value = 5
+			ClownKill.Value = 5
+			HopeBringerKill.Value=5
+			CivilianKill.Value=5
+			Status.Value="Solo Exploration Mode Activated"
+			wait(1) 
+		elseif #game.Players:GetPlayers()==2 then
+			print("Wobble")
+			ArmyKill.Value = 5
+			ClownKill.Value = 5
+			HopeBringerKill.Value=5
+			CivilianKill.Value=5
+			wait(1)
+		else   
+			ArmyKill.Value = 20
+			ClownKill.Value = 20
+			HopeBringerKill.Value=20
+			CivilianKill.Value=20
+			wait(1)
+		end 
+	end 
+end)
+if #game.Players:GetPlayers()==1 then
+	ArmyKill.Value = 5
+	ClownKill.Value = 5
+	HopeBringerKill.Value=5
+	CivilianKill.Value=5
+	Status.Value="Solo Exploration Mode Activated"
+	wait(1) 
+elseif #game.Players:GetPlayers()==2 then
+	print("Wobble")
+	ArmyKill.Value = 5
+	ClownKill.Value = 5
+	HopeBringerKill.Value=5
+	CivilianKill.Value=5
+	wait(1)
+else    
+	ArmyKill.Value = 20
+	ClownKill.Value = 20
+	HopeBringerKill.Value=20
+	CivilianKill.Value=20
+	wait(1)
+end 
+
+
+while true do
+	wait(2)
+	if Time.Value<=0 then 
+		for _,i in (game.Players:GetPlayers()) do 
+			if i.leaderstats.Kills.Value>=15 then 
+				Status.Value="On A Rampage  "..i.Name
+				TimeWait(15)
+				for _,l in (game.Players:GetPlayers()) do 
+					DS:RemoveAsync(l.UserId)
+				end
+				Restart()	
+			end
+		end
+	end
+	if Time.Value<=0 then 
+		if ArmyKill.Value<=0 then 
+		for _,i in (Player:GetPlayers()) do 
+			if 	i.Team==Teams.Army then 
+					i.Character:Remove()
+					i.Team=Teams.Team1
+					print("Removed")
+				end 
+			end
+			Status.Value="Round in progress"
+			end
+		if ClownKill.Value<=0 then 
+			for _,i in (Player:GetPlayers()) do 
+				if 	i.Team==Teams.Clowns then 
+					i.Character:Remove()
+					i.Team=Teams.Team1
+					print("Removed")
+				end 
+			end 
+			Status.Value="Round in progress"
+		end
+		if CivilianKill.Value<=0 then 
+			for _,i in (Player:GetPlayers()) do 
+				if 	i.Team==Teams.Civilians then 
+					i.Character:Remove()
+					i.Team=Teams.Team1
+				end 
+			end 
+		Status.Value="Round in progress"
+		end
+		if HopeBringerKill.Value<=0 then 
+			for _,i in (Player:GetPlayers()) do 
+				if 	i.Team==Teams.HopeBringers then 
+					i.Character:Remove()
+					i.Team=Teams.Team1
+				end 
+			end
+			Status.Value="Round in progress"
+		end
+	end
+	if Time.Value<=0 then
+		if ArmyKill.Value<=0 or ClownKill.Value<=0 or HopeBringerKill.Value<=0 or CivilianKill.Value<=0 then
+			if #(game.Players:GetPlayers())==2 then 
+				for _,i in  Player:GetPlayers() do 
+					if i.Character.Humanoid.Health>0 then 
+						Status.Value="Congratulations"..i.Name
+						TimeWait(15)
+							Restart()
+					end
+					end
+			else 
+					if ArmyKill<=0 and CivilianKill<=0 and HopeBringerKill<=0 then 
+						Status.Value="The clowns take over"
+						TimeWait(15)
+						Restart()
+					elseif ArmyKill<=0 and CivilianKill<=0 and  ClownKill<=0 then 
+							Status.Value="The HopeBringers have come"
+							TimeWait(15)
+						Restart()
+					elseif ClownKill<=0 and CivilianKill<=0 and HopeBringerKill<=0 then 
+							Status.Value="The Army dictaitorship has occured"
+							TimeWait(15)
+						Restart()
+					elseif ClownKill<=0 and ArmyKill<=0 and HopeBringerKill<=0 then 
+						Status.Value="Peace was restored"
+						TimeWait(15)
+						Restart()
+					end	
+				end 
+			end 
+		end
+		end 
