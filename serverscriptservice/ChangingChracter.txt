@@ -1,0 +1,25 @@
+local count=0
+game.ReplicatedStorage.Change.OnServerEvent:Connect(function(Player,player)
+	print("Lycan function has been called")
+	wait(2)
+	local HumanoidDescription=Instance.new("HumanoidDescription")
+	local Character=player.Character 
+	if Character==nil then return end 
+	if not Character:FindFirstChild("Humanoid") then return end 
+	if Character.Humanoid.Health==0 then return end 
+		local char=player.Character
+		if char==nil then return end
+		if count%2==0 and count~=1 and count<4 then 
+				char:Remove()
+				player:LoadCharacterWithHumanoidDescription(HumanoidDescription)
+				count+=1
+		elseif count<4 then
+				char:Remove()
+				print("Should be 2")
+				player:LoadCharacter()
+				count+=1
+		print(count)
+	else 
+			print("Nothing")
+		end 
+	end)
