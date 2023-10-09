@@ -1,0 +1,15 @@
+
+game.ReplicatedStorage.Load.OnServerEvent:Connect(function(player)
+	local Character=player.Character 
+	local Players=game:GetService("Players") 
+	if Character==nil then return end 
+	if not Character:FindFirstChild("Humanoid") then return end 
+	if Character.Humanoid.Health==0 then return end 
+	for _,plrs in Players:GetPlayers() do
+		local char=plrs.Character
+
+		if char==nil then continue end 
+		char:Remove()
+		plrs:LoadCharacter()
+		end
+end)
