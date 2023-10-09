@@ -1,0 +1,6 @@
+game.ReplicatedStorage.SpeedCheck.OnServerEvent:Connect(function(Player,player)
+	 local char=player.Character
+	local hum=char:WaitForChild("Humanoid")
+	hum.WalkSpeed=120	
+	end) 
+  
