@@ -1,0 +1,20 @@
+local uis=game:GetService("UserInputService")
+local player=game.Players.LocalPlayer
+local Character=player.Character or player.CharacterAdded:Wait()
+local HumanoidRP=Character:WaitForChild("HumanoidRootPart")
+local Humanoid=Character:WaitForChild("Humanoid")
+local rs=game:GetService("RunService")
+ 
+function WalkingRasengan()
+		game.ReplicatedStorage.NoGood:FireServer(player,HumanoidRP) 
+end
+uis.InputBegan:Connect(function(input)
+	if input.KeyCode==Enum.KeyCode.B then 
+		WalkingRasengan()
+	end
+	if input.KeyCode==Enum.KeyCode.N then 
+		print("Shoudl")
+		WalkingRasengan()
+			game.ReplicatedStorage.DestroyWeld:FireServer()
+	 end 
+end)
