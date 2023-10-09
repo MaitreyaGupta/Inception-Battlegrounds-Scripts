@@ -1,0 +1,30 @@
+local ReplicatedStorage=game:GetService("ReplicatedStorage")
+local Animation=Instance.new("Animation") 
+Animation.AnimationId="rbxassetid://14606080984"
+
+game.ReplicatedStorage.Emote.OnServerEvent:Connect(function(player,Skill)
+	local char=player.Character
+	local RootPart=char.PrimaryPart
+	local TweenService=game:GetService("TweenService")
+
+	if Skill=="Explode" then 
+		local Anim=char.Humanoid:LoadAnimation(Animation)
+		Anim:Play()
+
+		local Effects=game.ReplicatedStorage.Super:Clone()
+		Effects.CFrame=RootPart.CFrame
+		Effects.Orientation=RootPart.Orientation
+		Effects.Parent=workspace
+		game.Debris:AddItem(Effects,4)
+
+		local c=Effects:Clone()
+		c.Touched:Connect(function(hit)
+			if hit.Parent:FindFirstChild("Humanoid") then 
+				hit.Parent.Health-=30
+
+			end
+		end)
+		local c1=Effects.ParticleEmitter:Clone()
+		c1:Emit()
+	end
+end)
