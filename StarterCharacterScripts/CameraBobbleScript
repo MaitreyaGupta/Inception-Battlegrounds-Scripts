@@ -1,0 +1,23 @@
+local charecter=script.Parent
+local humanoid=charecter:WaitForChild("Humanoid")
+
+
+local rs=game:GetService("RunService")
+
+ 
+local function updateBobbleEffect()
+    local Currenttime=tick() 	
+	if humanoid.MoveDirection.Magnitude>0 then
+		local lerpX=math.cos(Currenttime*0.1)*0.25
+		local lerpY=math.abs(math.sin(Currenttime*10))*0.75
+		
+		
+		local bobble=Vector3.new(lerpX,lerpY,0)
+		
+		humanoid.CameraOffset=humanoid.CameraOffset:lerp(bobble,0.25)
+	else
+		humanoid.CameraOffset=humanoid.CameraOffset*0.75
+	end
+end
+
+rs.RenderStepped:Connect(updateBobbleEffect)
