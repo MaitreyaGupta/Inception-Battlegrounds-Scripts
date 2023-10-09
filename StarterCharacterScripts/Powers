@@ -1,0 +1,115 @@
+local Player=game.Players.LocalPlayer
+local CanJump=false
+local uis=game:GetService("UserInputService")
+local mouse=game:GetService("MouseService")
+local CanFire=false
+local camera=game.Workspace.Camera 
+local count=0
+local rs=game:GetService("RunService")
+local Count1=game.ReplicatedStorage.count1.Value
+local character=script.Parent 
+local player=game.Players.LocalPlayer
+local StarterGUI=game.Players.LocalPlayer.PlayerGui.arm
+local RUn=StarterGUI.TextButton
+local OnPower=false
+local troggle=false
+RUn.MouseButton1Click:Connect(function()
+	if troggle==false then 
+		troggle=true 
+	else
+		troggle=false
+	end
+end)
+
+local hum=character:WaitForChild("Humanoid")
+local uis=game:GetService("UserInputService")
+uis.InputBegan:Connect(function(input)
+	if  input.KeyCode==Enum.KeyCode.U  then  
+		print("Ha[p[]")
+		Jumping()
+	end
+end)
+local uis=game:GetService("UserInputService")
+uis.InputBegan:Connect(function(input)
+	if input.KeyCode==Enum.KeyCode.L and count<17 then  
+		ChangingCharacter()
+		IncreaseCount()
+	end
+end)
+local uis=game:GetService("UserInputService")
+uis.InputBegan:Connect(function(input)
+	if input.KeyCode==Enum.KeyCode.Q then 
+		ActivateMagic()
+	end
+end)
+	rs.RenderStepped:Connect(function()
+		if uis:IsKeyDown(Enum.KeyCode.LeftShift) or troggle==true  then 
+			game.ReplicatedStorage.SpeedCheck:FireServer(player)
+		else
+			game.ReplicatedStorage.SpeedRemove:FireServer(player)
+		end
+	end)
+if game.Players.LocalPlayer.TeamColor.Name==("White") then 
+	hum.MaxSlopeAngle=90
+	hum.Health=100
+	CanJump=false
+end
+if game.Players.LocalPlayer.TeamColor.Name==("Really blue") then 
+	hum.Health=100
+	CanJump=false
+end
+if game.Players.LocalPlayer.TeamColor.Name==("Dark stone grey") then 
+	hum.Health=100
+	CanJump=false
+end
+if game.Players.LocalPlayer.TeamColor.Name==("Hot pink") then 
+	hum.WalkSpeed=0 
+	hum.JumpPower=0
+end
+
+
+
+
+
+function Jumping()
+	if game.Players.LocalPlayer.TeamColor.Name==("Really blue") then 
+		local player=game.Players.LocalPlayer
+		game.ReplicatedStorage["JumpEvent "]:FireServer(player)
+	end
+end
+function ChangingCharacter() 
+	if game.Players.LocalPlayer.TeamColor.Name==("Really blue")  then 
+		local player=game.Players.LocalPlayer
+		game.ReplicatedStorage.Change:FireServer(player)
+	end 
+end 
+function IncreaseCount()
+	count=count+1
+end
+function ActivateMagic() 
+	if game.Players.LocalPlayer.TeamColor.Name==("White") then 
+		if CanFire==true  then 
+			local mouseLocation=uis:GetMouseLocation()
+			local ray=camera:ViewportPointToRay(mouseLocation.X,mouseLocation.Y)
+			ray=Ray.new(ray.Origin,ray.Direction*2000)	
+			game.ReplicatedStorage.MagicEvent:FireServer() 
+			CanFire=false 
+		else
+			CanFire=true 
+		end
+	end
+end
+uis.InputBegan:Connect(function(Input,chat)
+	if chat then return end 
+	if Input.KeyCode==Enum.KeyCode.L and game.Players.LocalPlayer.Team.TeamColor==BrickColor.new("Really blue") then  
+		game.ReplicatedStorage.count.Value+=1
+		print(game.ReplicatedStorage.count.Value)
+	end
+end)
+
+game.Players.LocalPlayer:GetPropertyChangedSignal("Team"):Connect(function()
+	print("Now")
+	local player=game.Players.LocalPlayer
+	game.ReplicatedStorage.TeamChanged:FireServer(player)
+	game.ReplicatedStorage["CheckTeam "]:FireServer(player)
+end)
