@@ -1,0 +1,34 @@
+local module = {}
+
+local count=0
+local Mesh=game.ReplicatedStorage.MeshPart:Clone()
+local hitbox=game.ReplicatedStorage.hitbox:Clone()
+local debris=game:GetService("Debris")
+module.ThisFunction=function(player)
+	count+=1
+	wait(6) 
+	if count<=3 then 
+		local char=player.Character 
+		local hum=char:WaitForChild("Humanoid")
+		local humRP=char:WaitForChild("HumanoidRootPart")
+		Mesh.Parent=workspace
+		Mesh.Position=humRP.Position
+		Mesh.CFrame=char.Head.CFrame
+		Mesh.Parent=workspace
+		Mesh.ParticleEmitter:Emit()	
+		Mesh.Attachment.Core:Emit()
+		Mesh.Attachment.Wave:Emit()
+		Mesh.Attachment1.Bolts:Emit()
+		Mesh.Attachment1.Bubble:Emit()
+		hitbox.Position=humRP.Position
+		hitbox.CFrame=char.Head.CFrame	
+		hitbox.Parent=workspace	
+		hitbox.Touched:Connect(function(hit)
+			if hit.Parent:FindFirstChild("Humanoid") and hit.Parent~=char then 
+				hit:Destroy()
+			end	
+		end)
+
+	end
+end 
+return module
