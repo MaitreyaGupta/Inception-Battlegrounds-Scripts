@@ -1,0 +1,36 @@
+local Player=game.Players.LocalPlayer 
+local Character=Player.Character or Player.CharacterAdded:Wait() 
+local Humanoid=Character:WaitForChild("Humanoid")
+local uis=game:GetService("UserInputService")
+local Animation=Instance.new("Animation")
+Animation.AnimationId="rbxassetid://14606080984"
+local AnimationTrack=Humanoid:LoadAnimation(Animation)
+local cooldown=true
+local HumanoidRootPart=Character:WaitForChild("HumanoidRootPart")
+local Position=HumanoidRootPart.Position
+local rs=game:GetService("RunService")
+local toggle=false
+function SuperSaiyan()
+	game.ReplicatedStorage.Emote:FireServer("Explode")
+end
+
+function OnCheck()
+	if toggle==true then 
+		rs:BindToRenderStep("SuperSaiyan",1,SuperSaiyan)
+	else
+		rs:UnbindFromRenderStep("SuperSaiyan")
+	end
+end 
+uis.InputBegan:Connect(function(input)
+	if input.KeyCode==Enum.KeyCode.E  then 
+		OnCheck()
+		if toggle==false then 
+			toggle=true 
+		else
+			toggle=false 
+		end
+	end 
+end)
+
+
+ 
