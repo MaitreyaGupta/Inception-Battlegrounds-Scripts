@@ -1,0 +1,15 @@
+local DS=game:GetService("DataStoreService"):GetDataStore("Datastore")
+local dt=DateTime.now()
+game.ReplicatedStorage.TeamChanged.OnServerEvent:Connect(function(Player,player)
+	task.wait(1)
+	print("here")
+	player.leaderstats.team.Value=player.Team.Name 
+	player.leaderstats.jointime.Value=tonumber(dt:FormatLocalTime("hh","en-us"))
+	if player.leaderstats.Kills.Value>1 then 
+		player.leaderstats.Kills.Value=player.leaderstats.Kills.Value-2
+	else
+		player.leaderstats.Kills.Value=0
+	end 
+	local data={Kills=player.leaderstats.Kills.Value,team=player.leaderstats.team.Value,jointime=player.leaderstats.jointime.Value}
+		DS:SetAsync(player.UserId,data)
+end)
