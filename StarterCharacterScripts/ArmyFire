@@ -1,0 +1,12 @@
+local player=game.Players.LocalPlayer
+local uis=game:GetService("UserInputService")
+local rs=game:GetService("RunService")
+
+uis.InputBegan:Connect(function(input)
+	if input.KeyCode==Enum.KeyCode.U then 
+		print("Here")
+		if player.Team.TeamColor.Name==("Really red") then
+			game.ReplicatedStorage.ArmyPower:FireServer(player)
+		end
+	end
+end)
