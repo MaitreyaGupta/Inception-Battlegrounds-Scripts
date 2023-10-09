@@ -1,0 +1,93 @@
+local DS=game:GetService("DataStoreService"):GetDataStore("Datastore")
+local Time=game.ReplicatedStorage.Time 
+local Status=game.ReplicatedStorage.Status
+local dt=DateTime.now()
+local player1=game:GetService("Players")
+ 
+ 
+game.Players.PlayerAdded:Connect(function(plr)
+   print(tonumber(dt:FormatLocalTime("hh","en-us")))
+	local leaderstats=Instance.new("Folder",plr)
+	leaderstats.Name="leaderstats"
+	
+	local Exp=Instance.new("StringValue",leaderstats)
+	Exp.Name="team"
+	Exp.Value=""
+	
+	local JoinTime=Instance.new("NumberValue",leaderstats)
+	JoinTime.Name="jointime"
+	JoinTime.Value=tonumber(dt:FormatLocalTime("hh","en-us"))
+	
+	local kills=Instance.new("NumberValue",leaderstats)
+	kills.Name="Kills"
+    kills.Value=0	
+	plr.CharacterAdded:Connect(function(char)
+		local Humanoid=char:WaitForChild("Humanoid")
+		Humanoid.Died:Connect(function()
+			print("Find")
+			local tag=Humanoid:FindFirstChild("creator")
+			print(tag)
+			local killer=tag.Value 
+			print(tag.Value)
+			if tag and killer then 
+					killer.leaderstats.Kills.Value+=1
+				end 
+		end)
+	end)
+   task.wait(1)
+	local data
+	local succes,err=pcall(function()
+		data=DS:GetAsync(plr.UserId)
+	end) 
+	if data then 
+		Exp.Value=data.team
+		JoinTime.Value=data.jointime
+		kills.Value=data.Kills
+	else
+		print("Failed")
+		end
+	 
+end)
+
+ 
+ 
+game.Players.PlayerRemoving:Connect(function(plr)
+	if #game.Players:GetPlayers()>1 then 
+	print("Here")
+		task.wait(0.1)
+		plr.leaderstats.jointime.Value=tonumber(dt:FormatLocalTime("hh","en-us"))
+		plr.leaderstats.Kills.Value=0
+		plr.leaderstats.team.Value=plr.Team.Name 
+		local data={Kills=plr.leaderstats.Kills.Value,team=plr.leaderstats.team.Value,jointime=plr.leaderstats.jointime.Value}
+	local success,err=pcall(function()
+			DS:SetAsync(plr.UserId,data)
+	end)
+	if success then 
+		print("Done")
+		else 
+		print(err)
+		end
+	else 
+	print("Ok Then")
+		task.wait(0.1)
+		plr.leaderstats.Kills.Value=0
+		plr.leaderstats.team.Value="Team1"
+		plr.leaderstats.jointime.Value=200
+		local data={Kills=plr.leaderstats.Kills.Value,team=plr.leaderstats.team.Value,jointime=plr.leaderstats.jointime.Value}
+	local success,err=pcall(function()
+			DS:SetAsync(plr.UserId,data)
+	end)
+	if success then 
+		print("Done")
+	else 
+		print(err)
+		end
+	end
+end)
+
+
+ 
+ 
+
+
+ 
