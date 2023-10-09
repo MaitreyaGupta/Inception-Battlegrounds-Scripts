@@ -1,0 +1,37 @@
+local Players=game:GetService("Players")
+local debris=game:GetService("Debris")
+function TagHumanoid(humanoid, player)
+	local Creator_Tag = Instance.new("ObjectValue")
+	Creator_Tag.Name = "creator"
+	Creator_Tag.Value = player
+	debris:AddItem(Creator_Tag, 0.3)
+	Creator_Tag.Parent = humanoid
+end
+
+function UntagHumanoid(humanoid)
+	for i, v in pairs(humanoid:GetChildren()) do
+		if v:IsA("ObjectValue") and v.Name == "creator" then
+			v:Destroy()
+		end
+	end
+end
+function DamageAndTagHumanoid(player, humanoid)
+	UntagHumanoid(Players)
+	TagHumanoid(humanoid, player)
+end
+game.ReplicatedStorage.FireMagic.OnServerEvent:Connect(function(player1,player,mouse1) 
+	local Fireball=game.ReplicatedStorage["FireBall"]:Clone()
+	Fireball.Parent=game.Workspace
+	Fireball.Position=player1.Character.PrimaryPart.Position
+	Fireball:ApplyImpulse(mouse1*1000)
+	Fireball.Touched:Connect(function(hit)
+		local humanoid1=hit.Parent
+		local humanoid=humanoid1:FindFirstChild("Humanoid")
+		if humanoid1==player.Character then return end 
+		if not humanoid then return end 
+		humanoid:TakeDamage(30)
+		DamageAndTagHumanoid(player,humanoid)
+	end)
+	wait(2)
+	Fireball:Destroy() 
+end) 
