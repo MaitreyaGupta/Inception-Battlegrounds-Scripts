@@ -1,0 +1,29 @@
+local JumpEvent=game.ReplicatedStorage:WaitForChild("JumpEvent ") 
+JumpEvent.OnServerEvent:Connect(function(Player,player)
+	local Players=game:GetService("Players")
+	local rs=game:GetService("RunService")
+	local ray=Ray.new() 
+	local camera=game.Workspace.Camera
+	local character=Player.Character
+	local bp=Instance.new("BodyPosition")
+	local bg=Instance.new("BodyGyro")
+	local camera=game.Workspace.Camera
+	local speed=5
+	if character==nil then return end 
+	if not character:FindFirstChild("Humanoid") then return end 
+	if character.Humanoid.Health==0 then return end 
+		local char=player.Character
+		local Humanoid=char:WaitForChild("Humanoid")
+		local HumanoidRootPart=char:WaitForChild("HumanoidRootPart")	
+		local Head=character:WaitForChild("Head")
+		local PivotPoint=char:GetPivot()
+		if PivotPoint.LookVector.Z<=0 then
+			HumanoidRootPart.Position-=Vector3.new(0,0,(HumanoidRootPart.Position+camera.CFrame.p).Magnitude*0.015)
+			HumanoidRootPart.Position+=Vector3.new(0,(HumanoidRootPart.Position+camera.CFrame.p).Magnitude*0.015,0)
+		else 
+			HumanoidRootPart.Position+=Vector3.new(0,0,(HumanoidRootPart.Position+camera.CFrame.p).Magnitude*0.015)
+			HumanoidRootPart.Position+=Vector3.new(0,(HumanoidRootPart.Position+camera.CFrame.p).Magnitude*0.015,0)	
+		end	
+		wait(1)
+		Humanoid.Health=50
+	end)
