@@ -1,0 +1,5 @@
+local Module=require(script.ModuleScript)
+game.ReplicatedStorage.B.OnServerEvent:Connect(function(Player,player)
+	print("Zehlaal e maskeen")
+	Module.ThisFunction(player)
+end)
